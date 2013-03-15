@@ -21,12 +21,14 @@ public class TodoDisplayAdapter extends ArrayAdapter<Task> {
 		LayoutInflater inflater = LayoutInflater.from(getContext());
 		View view = inflater.inflate(R.layout.row, null);
 		
-		TextView view = (TextView) super.getView(position, convertView, parent);
+		TextView txtTitle = (TextView) view.findViewById(R.id.txtTitle);
+		
+		txtTitle.setText(task.getName());
 		
 		if (position % 2 == 1) {
-			view.setTextColor(Color.BLUE);
+			txtTitle.setTextColor(Color.BLUE);
 		} else {
-			view.setTextColor(Color.RED);
+			txtTitle.setTextColor(Color.RED);
 		}
 		
 		return view;

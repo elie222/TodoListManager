@@ -15,6 +15,7 @@ import android.widget.ListView;
 public class TodoListManagerActivity extends Activity {
 	
 	private ArrayAdapter<Task> adapter;
+	private ListView listTasks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +24,7 @@ public class TodoListManagerActivity extends Activity {
         
         List<Task> tasks = new ArrayList<Task>();
         
-        ListView listTasks = (ListView) findViewById(R.id.lstTodoItems);
+        listTasks = (ListView) findViewById(R.id.lstTodoItems);
         
         adapter = new TodoDisplayAdapter(this, tasks);
         
@@ -51,15 +52,12 @@ public class TodoListManagerActivity extends Activity {
     		
     	case R.id.menuItemDelete:
     		
-    		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        	
-        	int selectedItemIndex = info.position;
+    		int selectedRow = listTasks.getSelectedItemPosition();
     		
-    		
-    		if (selectedItemIndex < 0) {
+    		if (selectedRow < 0) {
     			return true;
     		}
-    		adapter.remove(adapter.getItem(selectedItemIndex));
+    		adapter.remove(adapter.getItem(selectedRow));
     		break;
     	
     	default:
