@@ -1,7 +1,10 @@
 package il.ac.huji.todolist;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ public class TodoDisplayAdapter extends ArrayAdapter<Task> {
 		super(activity, android.R.layout.simple_list_item_1, tasks);
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
@@ -26,16 +30,25 @@ public class TodoDisplayAdapter extends ArrayAdapter<Task> {
 		TextView txtDueDate = (TextView) view.findViewById(R.id.txtTodoDueDate);
 		
 		txtTitle.setText(task.getTitle());
-		txtDueDate.setText(task.getDueDate().toString());
 		
-//		if (position % 2 == 1) {
-//			txtTitle.setTextColor(Color.BLUE);
-//		} else {
-//			txtTitle.setTextColor(Color.RED);
-//		}
 		
+		if (task.getDueDate() == null) {
+			txtDueDate.setText("No due date");
+		} else {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			
+			Date currentDate = new Date(System.currentTimeMillis());
+			
+			String formattedDueDate = dateFormat.format(task.getDueDate());
+			String formattedCurrentDate = dateFormat.format(currentDate);
+			txtDueDate.setText(formattedDueDate);
+			
+			if (currentDate.after(task.getDueDate()) && !(formattedDueDate.equals(formattedCurrentDate)))
+			{
+				txtTitle.setTextColor(Color.RED);
+				txtDueDate.setTextColor(Color.RED);
+			}
+		}
 		return view;
-		
 	}
-	
 }

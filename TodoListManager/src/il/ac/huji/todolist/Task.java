@@ -5,23 +5,18 @@ import java.util.Date;
 public class Task {
 	
 	private String _title;
-	private String _dueDate;
+	private Date _dueDate;
 	
 	public Task(String title, Date dueDate) {
 		_title = title;
-		_dueDate = dueDate.toString();
-	}
-	
-	public Task(String title, String dueDateString) {
-		_title = title;
-		_dueDate = dueDateString;
+		_dueDate = dueDate;
 	}
 
 	public String getTitle() {
 		return _title;
 	}
 	
-	public String getDueDate() {
+	public Date getDueDate() {
 		return _dueDate;
 	}
 }

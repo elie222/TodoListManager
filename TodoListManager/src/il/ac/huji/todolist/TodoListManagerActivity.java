@@ -20,7 +20,7 @@ import android.widget.ListView;
 
 public class TodoListManagerActivity extends Activity {
 	
-	private static final int ADD_ITEM_REQUEST_CODE = 1111;
+	private static final int ADD_ITEM_REQUEST_CODE = 1337;
 	private static final String CALL = "Call ";
 	private ArrayAdapter<Task> adapter;
 	private ListView listTasks;
@@ -80,7 +80,6 @@ public class TodoListManagerActivity extends Activity {
 		}
 	}
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -96,24 +95,10 @@ public class TodoListManagerActivity extends Activity {
     		//display other activity
     		Intent intent = new Intent(this, AddNewTodoItemActivity.class);
     		startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
-    		break;
-    		
-//    	case R.id.menuItemDelete:
-//    		
-//    		int selectedRow = listTasks.getSelectedItemPosition();
-//    		
-//    		if (selectedRow < 0) {
-//    			return true;
-//    		}
-//    		adapter.remove(adapter.getItem(selectedRow));
-//    		break;
-    	
+    		return true;
     	default:
     		return super.onOptionsItemSelected(item);
     	}
-    	
-    	return true;
-  
     }
     
     @Override
@@ -121,13 +106,8 @@ public class TodoListManagerActivity extends Activity {
     	if (requestCode == ADD_ITEM_REQUEST_CODE && resultCode == RESULT_OK) {
        		String title = data.getStringExtra("title");
     		Date dueDate = (Date)data.getSerializableExtra("dueDate");
-    		String dueDateString = dueDate.toString();
     		
-    		if (dueDate == null) {
-    			adapter.add(new Task(title, "No due date"));
-    		} else {
-    			adapter.add(new Task(title, dueDateString));
-    		}
+    		adapter.add(new Task(title, dueDate));
     	}
     }
     
