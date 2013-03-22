@@ -15,21 +15,24 @@ public class TodoDisplayAdapter extends ArrayAdapter<Task> {
 		super(activity, android.R.layout.simple_list_item_1, tasks);
 	}
 	
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		Task task = getItem(position);
 		LayoutInflater inflater = LayoutInflater.from(getContext());
 		View view = inflater.inflate(R.layout.row, null);
 		
-		TextView txtTitle = (TextView) view.findViewById(R.id.txtTitle);
+		TextView txtTitle = (TextView) view.findViewById(R.id.txtTodoTitle);
+		TextView txtDueDate = (TextView) view.findViewById(R.id.txtTodoDueDate);
 		
-		txtTitle.setText(task.getName());
+		txtTitle.setText(task.getTitle());
+		txtDueDate.setText(task.getDueDate().toString());
 		
-		if (position % 2 == 1) {
-			txtTitle.setTextColor(Color.BLUE);
-		} else {
-			txtTitle.setTextColor(Color.RED);
-		}
+//		if (position % 2 == 1) {
+//			txtTitle.setTextColor(Color.BLUE);
+//		} else {
+//			txtTitle.setTextColor(Color.RED);
+//		}
 		
 		return view;
 		
