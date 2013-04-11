@@ -2,7 +2,7 @@ package il.ac.huji.todolist;
 
 import java.util.Date;
 
-public class Task {
+public class Task implements ITodoItem {
 	
 	private String _title;
 	private Date _dueDate;
