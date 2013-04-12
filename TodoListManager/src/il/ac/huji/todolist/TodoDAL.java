@@ -16,15 +16,28 @@ public class TodoDAL extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "todo_db";
  
     // Contacts table name
-    private static final String TABLE_TODO = "todo";
+    public static final String TABLE_TODO = "todo";
  
     // Contacts Table Columns names
     private static final String KEY_ID = "_id";
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_DUE = "due";
-	
+    public static final String KEY_TITLE = "title";
+    public static final String KEY_DUE = "due";
+    
+    // Database Version
+    private static final int DATABASE_VERSION = 1;
+    
+    // for debugging purposes.
+    // private static final String TAG = "TODO_DAL";
+    
+    
+    
 	public TodoDAL(Context context) {
-		super(context, DATABASE_NAME, null, 1);
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	}
+	
+	public Cursor getCursor() {
+		String [] columns = new String[] { "_id", "title", "due" };
+		return this.getReadableDatabase().query("todo", columns, null, null, null, null, null);
 	}
 	
 	public boolean insert(ITodoItem todoItem) {
@@ -91,7 +104,7 @@ public class TodoDAL extends SQLiteOpenHelper {
 	}
 	
 	@Override
-	public void onCreate(SQLiteDatabase db) {
+	public void onCreate(SQLiteDatabase db) {		
 		db.execSQL("create table " + TABLE_TODO +
 				" ( " + KEY_ID + " integer primary key autoincrement, "
 				+ KEY_TITLE + " text, "
