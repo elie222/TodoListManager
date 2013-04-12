@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+
 public class TodoDAL extends SQLiteOpenHelper {
 	
 	// Database Name
@@ -104,7 +105,7 @@ public class TodoDAL extends SQLiteOpenHelper {
 	}
 	
 	@Override
-	public void onCreate(SQLiteDatabase db) {		
+	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("create table " + TABLE_TODO +
 				" ( " + KEY_ID + " integer primary key autoincrement, "
 				+ KEY_TITLE + " text, "
