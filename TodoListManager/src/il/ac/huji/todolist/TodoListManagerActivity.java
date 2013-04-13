@@ -2,14 +2,12 @@ package il.ac.huji.todolist;
 
 import java.util.Date;
 
-import com.parse.Parse;
-import com.parse.ParseObject;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+//import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -37,18 +35,9 @@ public class TodoListManagerActivity extends Activity {
     	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list_manager);
-        
-        
-        // Parse
-        Parse.initialize(this, "Y3FY5u7pskrxk5TLTrDUMCQhtqw3nvo5asf32grM", "Avh6f2lEQCqA9Sn6FPwJdMa8N9qfKoy7hP81vc7M");
-        
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
-        
-        
+
         todoDal = new TodoDAL(this);
-                        
+        
         listTasks = (ListView) findViewById(R.id.lstTodoItems);
                         
 		cursor = todoDal.getCursor();
@@ -152,6 +141,7 @@ public class TodoListManagerActivity extends Activity {
     		Date dueDate = (Date)data.getSerializableExtra("dueDate");
     		
     		todoDal.insert(new Task(title, dueDate));
+    		
     		updateAll();
     	}
     }

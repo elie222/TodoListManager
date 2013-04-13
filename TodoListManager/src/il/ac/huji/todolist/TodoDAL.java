@@ -4,11 +4,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONObject;
+
+import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+//import android.util.Log;
 
 
 public class TodoDAL extends SQLiteOpenHelper {
@@ -34,6 +44,12 @@ public class TodoDAL extends SQLiteOpenHelper {
     
 	public TodoDAL(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+		
+        // Parse
+        Parse.initialize(context,
+        		context.getResources().getString(R.string.parseApplication),
+        		context.getResources().getString(R.string.clientKey));
+		ParseUser.enableAutomaticUser();
 	}
 	
 	public Cursor getCursor() {
@@ -42,61 +58,175 @@ public class TodoDAL extends SQLiteOpenHelper {
 	}
 	
 	public boolean insert(ITodoItem todoItem) {
-		SQLiteDatabase db = this.getWritableDatabase();
-
-		ContentValues values = new ContentValues();
-		values.put(KEY_TITLE, todoItem.getTitle());
-		values.put(KEY_DUE, todoItem.getDueDate().getTime());
-
-		long r = db.insert(TABLE_TODO, null, values);
-		db.close();
 		
-		return r != -1;
+		if (todoItem == null) {
+			return false;
+		}
+		
+		if (todoItem.getTitle() == null) {
+			return false;
+		}
+				
+		try {
+			// DB
+			SQLiteDatabase db = this.getWritableDatabase();
+
+			ContentValues values = new ContentValues();
+			values.put(KEY_TITLE, todoItem.getTitle());
+			if (todoItem.getDueDate() != null) {
+				values.put(KEY_DUE, todoItem.getDueDate().getTime());
+			} else {
+				values.putNull(KEY_DUE);
+			}
+			
+			long r = db.insert(TABLE_TODO, null, values);
+			db.close();
+
+			if (r == -1) {
+				return false;
+			}
+
+			// Parse
+			ParseObject obj = new ParseObject(TABLE_TODO);
+			obj.put(KEY_TITLE, todoItem.getTitle());
+
+			if (todoItem.getDueDate() != null) {
+				obj.put(KEY_DUE, todoItem.getDueDate().getTime());
+			} else {
+				obj.put(KEY_DUE, JSONObject.NULL);
+			}
+			
+
+			obj.saveInBackground();
+			
+		} catch (Exception e) {
+			return false;
+		}
+				
+		return true;
 	}
 	
 	public boolean update(ITodoItem todoItem) {
-		SQLiteDatabase db = this.getWritableDatabase();
 		
-		ContentValues values = new ContentValues();
-		values.put(KEY_TITLE, todoItem.getTitle());
-		values.put(KEY_DUE, todoItem.getDueDate().getTime());
+		if (todoItem == null) {
+			return false;
+		}
+		
+		if (todoItem.getTitle() == null) {
+			return false;
+		}
+		
+		try {
+			// DB
+			SQLiteDatabase db = this.getWritableDatabase();
 
-		String where = KEY_TITLE + " = ?";
-		String[] whereArgs = {todoItem.getTitle()};
+			ContentValues values = new ContentValues();
+			values.put(KEY_TITLE, todoItem.getTitle());
+			
+			if (todoItem.getDueDate() != null) {
+				values.put(KEY_DUE, todoItem.getDueDate().getTime());
+			} else {
+				values.putNull(KEY_DUE);
+			}
+
+			String where = KEY_TITLE + " = ?";
+			String[] whereArgs = {todoItem.getTitle()};
+
+			long r = db.update(TABLE_TODO, values, where, whereArgs);
+			db.close();
+
+			if (r == -1) {
+				return false;
+			}
+			
+			// Parse
+			final Date dueDate = todoItem.getDueDate();
+			
+			ParseQuery query = new ParseQuery(TABLE_TODO);
+			query.whereEqualTo(KEY_TITLE, todoItem.getTitle());
+			query.findInBackground(new FindCallback() {
+			    public void done(List<ParseObject> scoreList, ParseException e) {
+			        if (e == null) {
+			        	if (scoreList.size() == 1) {
+			        		ParseObject objToUpdate = scoreList.get(0);
+			        		if (dueDate != null) {
+			        			objToUpdate.put(KEY_DUE, dueDate.getTime());
+			        		} else {
+			        			objToUpdate.put(KEY_DUE, JSONObject.NULL);
+			        		}
+			        		objToUpdate.saveInBackground();
+			        	}
+			        } else {
+//			            Log.d("TodoDAL", "Error: " + e.getMessage());
+			        }
+			    }
+			});
+			
+		} catch (Exception e) {
+			return false;
+		}
 		
-		long r = db.update(TABLE_TODO, values, where, whereArgs);
-		db.close();
-		
-		return r != -1;
+		return true;
 	}
 	
 	public boolean delete(ITodoItem todoItem) {
-		SQLiteDatabase db = this.getWritableDatabase();
+		
+		if (todoItem == null) {
+			return false;
+		}
+		
+		if (todoItem.getTitle() == null) {
+			return false;
+		}
+		
+		try {
+			// DB
+			SQLiteDatabase db = this.getWritableDatabase();
 
-		String where = KEY_TITLE + " = ?";
-		String[] whereArgs = {todoItem.getTitle()};
+			String where = KEY_TITLE + " = ?";
+			String[] whereArgs = {todoItem.getTitle()};
+
+			long r = db.delete(TABLE_TODO, where, whereArgs);
+			db.close();
+			
+			if (r == -1) {
+				return false;
+			}
+			
+			// Parse			
+			ParseQuery query = new ParseQuery(TABLE_TODO);
+			query.whereEqualTo(KEY_TITLE, todoItem.getTitle());
+			query.findInBackground(new FindCallback() {
+			    public void done(List<ParseObject> scoreList, ParseException e) {
+			        if (e == null) {
+			        	if (scoreList.size() == 1) {
+			        		ParseObject objToDelete = scoreList.get(0);
+			        		objToDelete.deleteInBackground();
+			        	}
+			        } else {
+//			            Log.d("TodoDAL", "Error: " + e.getMessage());
+			        }
+			    }
+			});
+			
+		} catch (Exception e) {
+			return false;
+		}
 		
-		long r = db.delete(TABLE_TODO, where, whereArgs);
-		db.close();
-		
-		return r != -1;
+		return true;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public List<ITodoItem> all() {		
 		List<ITodoItem> todoItemList = new ArrayList<ITodoItem>();
 		
-	    // Select All Query
-	    String selectQuery = "SELECT * FROM " + TABLE_TODO;
+	    String queryStr = "SELECT * FROM " + TABLE_TODO;
 	 
 	    SQLiteDatabase db = this.getWritableDatabase();
-	    Cursor cursor = db.rawQuery(selectQuery, null);
+	    Cursor cursor = db.rawQuery(queryStr, null);
 	 
-	    // looping through all rows and adding to list
 	    if (cursor.moveToFirst()) {
 	        do {
-	            Task task = new Task(cursor.getString(1), new Date(cursor.getString(2)));
-	            // Adding contact to list
+	            Task task = new Task(cursor.getString(1), new Date(cursor.getLong(2)));
 	            todoItemList.add(task);
 	        } while (cursor.moveToNext());
 	    }
@@ -114,7 +244,6 @@ public class TodoDAL extends SQLiteOpenHelper {
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
 
 	}
 }
