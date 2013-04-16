@@ -1,13 +1,25 @@
 package il.ac.huji.todolist;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-//import android.util.Log;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -27,14 +39,26 @@ public class TodoListManagerActivity extends Activity {
 	private TodoDAL todoDal;
 	private Cursor cursor;
 	
-	// for debugging purposes.
-	//private static final String TAG = "TLM_ACTIVITY";
+	// for debugging purposes. TAG is used for printing to console.
+	private static final String TAG = "TLM_ACTIVITY";
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
     	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list_manager);
+        
+        // TODO is this in the right place?
+        Twitter twitter = new Twitter("todoapp");
+        try {
+			twitter.getNewTweets();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         todoDal = new TodoDAL(this);
         
@@ -95,7 +119,7 @@ public class TodoListManagerActivity extends Activity {
 		{
 			case R.id.menuItemDelete:
 				todoDal.delete(selectedItem);
-				updateAll();		    	
+				refresh();		    	
 				return true;
 				
 			case R.id.menuItemCall:
@@ -129,6 +153,10 @@ public class TodoListManagerActivity extends Activity {
     		
     		return true;
     		
+    	case R.id.menuItemAddThumbnail:
+    		//TODO add flickr thumbnail
+    		return true;
+    		
     	default:
     		return super.onOptionsItemSelected(item);
     	}
@@ -142,11 +170,11 @@ public class TodoListManagerActivity extends Activity {
     		
     		todoDal.insert(new Task(title, dueDate));
     		
-    		updateAll();
+    		refresh();
     	}
     }
     
-    public void updateAll() {
+    private void refresh() {
     	cursor = todoDal.getCursor();
     	adapter.changeCursor(cursor);
     	adapter.notifyDataSetChanged();

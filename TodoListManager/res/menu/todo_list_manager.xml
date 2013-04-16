@@ -5,13 +5,9 @@
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/add"/>
     
-<!--     <item
-        android:id="@+id/menuItemDelete"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:title="@string/delete"/> -->
-    
-<!-- 	<item
-        android:id="@+id/menuItemCall"
-        android:title="@string/call"/> -->
+    <item
+        android:id="@+id/menuItemAddThumbnail"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/addThumbnail"/>
 
 </menu>
