@@ -11,19 +11,23 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.AsyncTask;
+import android.widget.SimpleCursorAdapter;
 
 public class TwitterAsyncTask extends AsyncTask<String, Void, ArrayList<Tweet>> {
 
 	private Context _context;
 	private String _tag;
-	private Activity _activity;
+	private TodoDAL _todoDal;
 	private ProgressDialog progressDialog;
+	private SimpleCursorAdapter _adapter;
 
-	public TwitterAsyncTask(Context context, String tag, TodoListManagerActivity activity) {
+	public TwitterAsyncTask(Context context, String tag, TodoDAL todoDal, SimpleCursorAdapter adapter) {
 		_context = context;
 		_tag = tag;
-		_activity = activity;
+		_todoDal = todoDal;
+		_adapter = adapter;
 	}
 
 	@Override
@@ -51,13 +55,13 @@ public class TwitterAsyncTask extends AsyncTask<String, Void, ArrayList<Tweet>> 
                     // Create new todo items
                 	for (int i=0; i<result.size(); i++) {
                 		//TODO date
-//                		_todoDal.insert(new Task(result.get(i).getText(), new Date(1)));
-//                    	cursor = _todoDal.getCursor();
-//                    	adapter.changeCursor(cursor);
-//                    	adapter.notifyDataSetChanged();
-                    	
-                    	_activity.refresh();
+                		_todoDal.insert(new Task(result.get(i).getText(), new Date(1)));
 //                		_todoDal.insert(new Task(result.get(i).getText(), result.get(i).getCreatedAt()));
+
+                    	Cursor cursor = _todoDal.getCursor();
+                    	_adapter.changeCursor(cursor);
+                    	_adapter.notifyDataSetChanged();
+                    	
                 	}
                 }
             })

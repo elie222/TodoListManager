@@ -4,10 +4,8 @@ import java.util.Date;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -52,7 +50,7 @@ public class TodoListManagerActivity extends FragmentActivity {
         registerForContextMenu(listTasks);
         
         // TODO change todoapp to the tag that is set in preferences.
-        new TwitterAsyncTask(TodoListManagerActivity.this, "todoapp", this).execute();
+        new TwitterAsyncTask(TodoListManagerActivity.this, "todoapp", todoDal, adapter).execute();
     }
     
     @Override
