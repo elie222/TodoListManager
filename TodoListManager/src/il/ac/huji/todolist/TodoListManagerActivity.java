@@ -1,24 +1,14 @@
 package il.ac.huji.todolist;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -30,7 +20,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-public class TodoListManagerActivity extends Activity {
+public class TodoListManagerActivity extends FragmentActivity {
 	
 	private static final int ADD_ITEM_REQUEST_CODE = 1337;
 	private static final String CALL = "Call ";
@@ -47,18 +37,6 @@ public class TodoListManagerActivity extends Activity {
     	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list_manager);
-        
-        // TODO is this in the right place?
-        Twitter twitter = new Twitter("todoapp");
-        try {
-			twitter.getNewTweets();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
         todoDal = new TodoDAL(this);
         
@@ -72,6 +50,9 @@ public class TodoListManagerActivity extends Activity {
         listTasks.setAdapter(adapter);
                 
         registerForContextMenu(listTasks);
+        
+        // TODO change todoapp to the tag that is set in preferences.
+        new TwitterAsyncTask(TodoListManagerActivity.this, "todoapp", this).execute();
     }
     
     @Override
@@ -169,7 +150,6 @@ public class TodoListManagerActivity extends Activity {
     		Date dueDate = (Date)data.getSerializableExtra("dueDate");
     		
     		todoDal.insert(new Task(title, dueDate));
-    		
     		refresh();
     	}
     }
