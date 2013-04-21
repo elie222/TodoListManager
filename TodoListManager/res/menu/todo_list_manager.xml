@@ -10,4 +10,9 @@
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/addThumbnail"/>
 
+	<item
+        android:id="@+id/menuItemSettings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/action_settings"/>
+    
 </menu>

@@ -17,9 +17,11 @@ import android.util.Log;
 public class Twitter {
 
 	private String _tag;
+	private long _sinceId;
 
-	public Twitter(String tag) {
+	public Twitter(String tag, long sinceId) {
 		_tag = tag;
+		_sinceId = sinceId;
 	}
 
 	private static String readStream(InputStream in) throws IOException {
@@ -38,7 +40,7 @@ public class Twitter {
 		ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 		
 		URL url = new URL("http://search.twitter.com/search.json?q=%23" + _tag
-				+ "&rpp=100");
+				+ "&rpp=100&since_id=" + _sinceId);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		String response = readStream(conn.getInputStream());
 

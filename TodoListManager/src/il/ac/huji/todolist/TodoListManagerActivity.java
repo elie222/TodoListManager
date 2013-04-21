@@ -4,7 +4,9 @@ import java.util.Date;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -21,6 +23,8 @@ import android.widget.SimpleCursorAdapter;
 public class TodoListManagerActivity extends FragmentActivity {
 	
 	private static final int ADD_ITEM_REQUEST_CODE = 1337;
+	private static final int SETTINGS_REQUEST_CODE = 1338;
+	
 	private static final String CALL = "Call ";
 	private SimpleCursorAdapter adapter;
 	private ListView listTasks;
@@ -49,8 +53,13 @@ public class TodoListManagerActivity extends FragmentActivity {
                 
         registerForContextMenu(listTasks);
         
-        // TODO change todoapp to the tag that is set in preferences.
-        new TwitterAsyncTask(TodoListManagerActivity.this, "todoapp", todoDal, adapter).execute();
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
+        // TODO change 1 to the most recent id already checked.
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String tagPref = prefs.getString(SettingsActivity.PREF_KEY_TAG, "todoapp");
+        
+        new TwitterAsyncTask(TodoListManagerActivity.this, tagPref, todoDal, adapter).execute();
     }
     
     @Override
@@ -126,7 +135,6 @@ public class TodoListManagerActivity extends FragmentActivity {
     	
     	switch (item.getItemId()) {    	
     	case R.id.menuItemAdd:
-    		//display other activity
     		Intent intent = new Intent(this, AddNewTodoItemActivity.class);
     		startActivityForResult(intent, ADD_ITEM_REQUEST_CODE);
     		
@@ -134,6 +142,12 @@ public class TodoListManagerActivity extends FragmentActivity {
     		
     	case R.id.menuItemAddThumbnail:
     		//TODO add flickr thumbnail
+    		return true;
+    		
+    	case R.id.menuItemSettings:
+    		intent = new Intent(this, SettingsActivity.class);
+    		startActivityForResult(intent, SETTINGS_REQUEST_CODE);
+    		
     		return true;
     		
     	default:
