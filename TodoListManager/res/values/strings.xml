@@ -15,5 +15,7 @@
 <!--     <string name="addNewTweetsQuestion">Add new tweets as todo items?</string> -->
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    
+    <string name="dialog_add_thumbnail">Add Thumbnail</string>
 
 </resources>

@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="14"
         android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -27,14 +27,19 @@
         </activity>
         <activity 
             android:name="il.ac.huji.todolist.AddNewTodoItemActivity"
-            android:label="Add New Item">
-            
+            android:label="Add New Item"
+            android:theme="@android:style/Theme.Holo.Dialog">
+        </activity>
+        <activity 
+            android:name="il.ac.huji.todolist.AddThumbnailActivity"
+            android:label="Add Thumbnail Image"
+            android:theme="@android:style/Theme.Holo.Dialog">
         </activity>
         <activity 
             android:name="il.ac.huji.todolist.SettingsActivity"
             android:label="Settings">
-            
         </activity>
+
     </application>
 
 </manifest>

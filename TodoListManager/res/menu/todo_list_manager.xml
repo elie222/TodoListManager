@@ -4,11 +4,6 @@
         android:id="@+id/menuItemAdd"
         android:icon="@android:drawable/ic_menu_add"
         android:title="@string/add"/>
-    
-    <item
-        android:id="@+id/menuItemAddThumbnail"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/addThumbnail"/>
 
 	<item
         android:id="@+id/menuItemSettings"

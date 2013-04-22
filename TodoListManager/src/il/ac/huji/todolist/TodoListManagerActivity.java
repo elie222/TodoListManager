@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -24,6 +25,7 @@ public class TodoListManagerActivity extends FragmentActivity {
 	
 	private static final int ADD_ITEM_REQUEST_CODE = 1337;
 	private static final int SETTINGS_REQUEST_CODE = 1338;
+	private static final int ADD_THUMBNAIL_REQUEST_CODE = 1339;
 	
 	private static final String CALL = "Call ";
 	private SimpleCursorAdapter adapter;
@@ -83,7 +85,7 @@ public class TodoListManagerActivity extends FragmentActivity {
 			menu.getItem(1).setTitle(title);
 		} else {
 			menu.removeItem(R.id.menuItemCall);
-		}  
+		}
     }
     
 	@Override
@@ -118,6 +120,16 @@ public class TodoListManagerActivity extends FragmentActivity {
 				
 			    return true;
 			    
+			case R.id.menuItemAddThumbnail:
+				//TODO
+				// show a new activity that allows the user to search for an image on flickr
+				//and select it as the thumbnail for this todoitem
+				
+	    		Intent thumbnailIntent = new Intent(this, AddNewTodoItemActivity.class);
+	    		startActivityForResult(thumbnailIntent, ADD_THUMBNAIL_REQUEST_CODE);
+				
+				return true;
+			    
             default:
                 return super.onContextItemSelected(item);
 		}
@@ -140,10 +152,6 @@ public class TodoListManagerActivity extends FragmentActivity {
     		
     		return true;
     		
-    	case R.id.menuItemAddThumbnail:
-    		//TODO add flickr thumbnail
-    		return true;
-    		
     	case R.id.menuItemSettings:
     		intent = new Intent(this, SettingsActivity.class);
     		startActivityForResult(intent, SETTINGS_REQUEST_CODE);
@@ -163,6 +171,8 @@ public class TodoListManagerActivity extends FragmentActivity {
     		
     		todoDal.insert(new Task(title, dueDate));
     		refresh();
+    	} else if (requestCode == ADD_THUMBNAIL_REQUEST_CODE && resultCode == RESULT_OK) {
+    		
     	}
     }
     

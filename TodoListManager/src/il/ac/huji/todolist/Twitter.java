@@ -45,12 +45,9 @@ public class Twitter {
 		String response = readStream(conn.getInputStream());
 
 		JSONObject json = new JSONObject(response);
-//		Log.d("TWITTER", json.toString());
 		JSONArray jsonArr = json.getJSONArray("results");
 		
-		for (int i=0; i<jsonArr.length(); i++) {
-//			Log.d("TWITTER", tweet);
-			
+		for (int i=0; i<jsonArr.length(); i++) {			
 			long id = jsonArr.getJSONObject(i).getLong("id");
 			String text = jsonArr.getJSONObject(i).getString("text");
 			String createdAt = jsonArr.getJSONObject(i).getString("created_at");

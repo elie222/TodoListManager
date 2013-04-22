@@ -5,5 +5,7 @@
         android:title="@string/delete" />
     <item android:id="@+id/menuItemCall"
         android:title="" />
+    <item android:id="@+id/menuItemAddThumbnail"
+        android:title="@string/addThumbnail" />
 
 </menu>

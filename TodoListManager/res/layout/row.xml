@@ -6,6 +6,11 @@
     android:orientation="horizontal"
     android:padding="10dp" >
 
+    <ImageView 
+        android:id="@+id/imgThumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:contentDescription="thumbnail image"/>
+    
     <TextView
         android:id="@+id/txtTodoTitle"
         android:layout_width="wrap_content"

@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -45,6 +46,7 @@ public class TodoListCursorAdapter extends SimpleCursorAdapter {
 		
 		TextView txtTitle = (TextView) view.findViewById(R.id.txtTodoTitle);
 		TextView txtDueDate = (TextView) view.findViewById(R.id.txtTodoDueDate);
+		ImageView imgThumbnail = (ImageView) view.findViewById(R.id.imgThumbnail);
 		
 		txtTitle.setText(task.getTitle());
 		
@@ -66,6 +68,9 @@ public class TodoListCursorAdapter extends SimpleCursorAdapter {
 				txtDueDate.setTextColor(Color.RED);
 			}
 		}
+		
+//		imgThumbnail.setImageBitmap(bm);
+		
 		return view;
 	}
 }
