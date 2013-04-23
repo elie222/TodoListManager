@@ -17,5 +17,7 @@
     <string name="no">No</string>
     
     <string name="dialog_add_thumbnail">Add Thumbnail</string>
+    
+    <string name="search">Search</string>
 
 </resources>

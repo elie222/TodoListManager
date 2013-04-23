@@ -1,6 +1,7 @@
 package il.ac.huji.todolist;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -19,13 +20,13 @@ public class FlickrAsyncTask extends AsyncTask<String, Void, double[]> {
 
 	private Context _context;
 	private GridView _resultGridView;
-	private ImageView _imageMap;
-	private Bitmap _map;
 	private ProgressDialog _progressDialog;
+	private String _searchQuery;
 
-	public FlickrAsyncTask(Context context, GridView resultGridView) {
+	public FlickrAsyncTask(Context context, GridView resultGridView, String searchQuery) {
 		_context = context;
 		_resultGridView = resultGridView;
+		_searchQuery = searchQuery;
 	}
 
 	@Override
@@ -41,17 +42,14 @@ public class FlickrAsyncTask extends AsyncTask<String, Void, double[]> {
 	@Override
 	protected void onPostExecute(double[] result) {
 		_progressDialog.dismiss();
-//		resultTextView.setText(String.format("Coordinates: %2.2f, %2.2f",
-//				result[0], result[1]));
-		_imageMap.setImageBitmap(_map);
-		_imageMap.requestLayout();
+		
 		super.onPostExecute(result);
 	}
 
 	@Override
 	protected double[] doInBackground(String... params) {
 		ArrayList<Photo> photos = new ArrayList<Photo>();
-		Flickr flickr = new Flickr(params[0]);
+		Flickr flickr = new Flickr(_searchQuery);
 		
 		try {
 			photos = flickr.getPhotos();
@@ -61,9 +59,13 @@ public class FlickrAsyncTask extends AsyncTask<String, Void, double[]> {
 			e.printStackTrace();
 		}
 		
-		// TODO change this line
-		_map = loadBitmap(photos.get(0).getImageThumbnailAddress());
-		return new double[] { flickr.getLatitude(), flickr.getLongitude() };
+		for (int i=0; i<)
+		
+		//TODO download image and save to local storage
+		
+		
+//		return new double[] { flickr.getLatitude(), flickr.getLongitude() };
+		return new double[] { 0, 0 };
 	}
 
 	private static Bitmap loadBitmap(URL url) {

@@ -66,29 +66,17 @@ public class TwitterAsyncTask extends AsyncTask<String, Void, ArrayList<Tweet>> 
 			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     // Create new todo items
-//                	long latestTweetIdInResult = 0;
                 	for (int i=0; i<result.size(); i++) {
                 		if (result.get(i).getId() > _latestTweetId) {
 	                		//TODO date
-	                		_todoDal.insert(new Task(result.get(i).getText(), new Date(1)));
+	                		_todoDal.insert(new Task(result.get(i).getText(), new Date(1)), null);
 //	                		_todoDal.insert(new Task(result.get(i).getText(), result.get(i).getCreatedAt()));
                 		}
-                		
-//                    	// so we don't add tweets as todos twice.
-//                    	if (latestTweetIdInResult < result.get(i).getId()) {
-//                    		latestTweetIdInResult = result.get(i).getId();
-//                    	}
                 	}
                 	
                 	Cursor cursor = _todoDal.getCursor();
                 	_adapter.changeCursor(cursor);
                 	_adapter.notifyDataSetChanged();
-                	
-//                	// so we don't add tweets as todos twice.
-//                	// this if should always be true really.
-//                	if (_latestTweetId < latestTweetIdInResult) {
-//                		_latestTweetId = latestTweetIdInResult;
-//                	}
                 }
             })
 			.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

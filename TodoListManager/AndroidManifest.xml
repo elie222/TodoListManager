@@ -30,11 +30,13 @@
             android:label="Add New Item"
             android:theme="@android:style/Theme.Holo.Dialog">
         </activity>
-        <activity 
+        
+		<activity 
             android:name="il.ac.huji.todolist.AddThumbnailActivity"
             android:label="Add Thumbnail Image"
             android:theme="@android:style/Theme.Holo.Dialog">
         </activity>
+
         <activity 
             android:name="il.ac.huji.todolist.SettingsActivity"
             android:label="Settings">

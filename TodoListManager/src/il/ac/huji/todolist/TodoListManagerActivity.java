@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -57,7 +58,6 @@ public class TodoListManagerActivity extends FragmentActivity {
         
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        // TODO change 1 to the most recent id already checked.
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String tagPref = prefs.getString(SettingsActivity.PREF_KEY_TAG, "todoapp");
         
@@ -125,7 +125,8 @@ public class TodoListManagerActivity extends FragmentActivity {
 				// show a new activity that allows the user to search for an image on flickr
 				//and select it as the thumbnail for this todoitem
 				
-	    		Intent thumbnailIntent = new Intent(this, AddNewTodoItemActivity.class);
+	    		Intent thumbnailIntent = new Intent(this, AddThumbnailActivity.class);
+	    		thumbnailIntent.putExtra("title", selectedItem.getTitle());
 	    		startActivityForResult(thumbnailIntent, ADD_THUMBNAIL_REQUEST_CODE);
 				
 				return true;
@@ -169,10 +170,23 @@ public class TodoListManagerActivity extends FragmentActivity {
        		String title = data.getStringExtra("title");
     		Date dueDate = (Date)data.getSerializableExtra("dueDate");
     		
-    		todoDal.insert(new Task(title, dueDate));
+    		todoDal.insert(new Task(title, dueDate), null);
     		refresh();
     	} else if (requestCode == ADD_THUMBNAIL_REQUEST_CODE && resultCode == RESULT_OK) {
+    		// plan:
+    		// save image to local storage in other activity
+    		// other activity sends title and location
+    		// take the image and add as it as the thumbnail
     		
+       		String title = data.getStringExtra("title");
+       		Bitmap bm = (Bitmap)data.getSerializableExtra("bitmap");
+       		
+       		todoDal.updateThumbnail(title, bm);
+       		//TODO
+//       	thumbnail = data.getStringExtra("thumbnail");
+
+//    		todoDal.update(new Task(title, dueDate));
+    		refresh();
     	}
     }
     

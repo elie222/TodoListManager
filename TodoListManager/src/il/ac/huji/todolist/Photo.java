@@ -17,7 +17,7 @@ public class Photo {
 		_farm = farm;
 	}
 	
-	public URL getImageThumbnailAddress() throws MalformedURLException {
+	public URL getImageThumbnailURL() throws MalformedURLException {
 		return new URL("http://farm"+_farm+".staticflickr.com/"+_server+_id+"_"+_secret+"_t.jpg");
 	}
 

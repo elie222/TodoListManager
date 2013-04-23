@@ -33,12 +33,13 @@ public class TodoDAL extends SQLiteOpenHelper {
     private static final String KEY_ID = "_id";
     public static final String KEY_TITLE = "title";
     public static final String KEY_DUE = "due";
+    public static final String KEY_THUMBNAIL_LOC = "thumbnailLoc";
     
     // Database Version
     private static final int DATABASE_VERSION = 1;
     
     // for debugging purposes.
-    // private static final String TAG = "TODO_DAL";
+    private static final String TAG = "TODO_DAL";
     
     
     
@@ -57,7 +58,8 @@ public class TodoDAL extends SQLiteOpenHelper {
 		return this.getReadableDatabase().query("todo", columns, null, null, null, null, null);
 	}
 	
-	public boolean insert(ITodoItem todoItem) {
+	//TODO parse - thumbnail
+	public boolean insert(ITodoItem todoItem, String thumbnailLoc) {
 		
 		if (todoItem == null) {
 			return false;
@@ -72,11 +74,22 @@ public class TodoDAL extends SQLiteOpenHelper {
 			SQLiteDatabase db = this.getWritableDatabase();
 
 			ContentValues values = new ContentValues();
+			
+			//title
 			values.put(KEY_TITLE, todoItem.getTitle());
+			
+			//dueDate
 			if (todoItem.getDueDate() != null) {
 				values.put(KEY_DUE, todoItem.getDueDate().getTime());
 			} else {
 				values.putNull(KEY_DUE);
+			}
+			
+			//thumbnail
+			if (thumbnailLoc != null) {
+				values.put(KEY_THUMBNAIL_LOC, thumbnailLoc);
+			} else {
+				values.putNull(KEY_THUMBNAIL_LOC);
 			}
 			
 			long r = db.insert(TABLE_TODO, null, values);
@@ -106,7 +119,8 @@ public class TodoDAL extends SQLiteOpenHelper {
 		return true;
 	}
 	
-	public boolean update(ITodoItem todoItem) {
+	//TODO parse - thumbnails
+	public boolean update(ITodoItem todoItem, String thumbnailLoc) {
 		
 		if (todoItem == null) {
 			return false;
@@ -121,12 +135,22 @@ public class TodoDAL extends SQLiteOpenHelper {
 			SQLiteDatabase db = this.getWritableDatabase();
 
 			ContentValues values = new ContentValues();
+			
+			//title
 			values.put(KEY_TITLE, todoItem.getTitle());
 			
+			//dueDate
 			if (todoItem.getDueDate() != null) {
 				values.put(KEY_DUE, todoItem.getDueDate().getTime());
 			} else {
 				values.putNull(KEY_DUE);
+			}
+			
+			//thumbnail
+			if (thumbnailLoc != null) {
+				values.put(KEY_THUMBNAIL_LOC, thumbnailLoc);
+			} else {
+				values.putNull(KEY_THUMBNAIL_LOC);
 			}
 
 			String where = KEY_TITLE + " = ?";
@@ -216,6 +240,11 @@ public class TodoDAL extends SQLiteOpenHelper {
 		return true;
 	}
 	
+	public boolean addThumbnail() {
+		return false;
+		
+	}
+	
 	public List<ITodoItem> all() {		
 		List<ITodoItem> todoItemList = new ArrayList<ITodoItem>();
 		
@@ -239,7 +268,8 @@ public class TodoDAL extends SQLiteOpenHelper {
 		db.execSQL("create table " + TABLE_TODO +
 				" ( " + KEY_ID + " integer primary key autoincrement, "
 				+ KEY_TITLE + " text, "
-				+ KEY_DUE + " long);");
+				+ KEY_DUE + " long, "
+				+ KEY_THUMBNAIL_LOC + " text);");
 	}
 	
 	@Override
