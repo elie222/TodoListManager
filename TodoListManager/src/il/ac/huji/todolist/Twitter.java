@@ -34,7 +34,6 @@ public class Twitter {
 		return buffer.toString();
 	}
 
-	//TODO limit to first 100 tweets
 	public ArrayList<Tweet> getTweets() throws IOException, JSONException {
 		
 		ArrayList<Tweet> tweets = new ArrayList<Tweet>();

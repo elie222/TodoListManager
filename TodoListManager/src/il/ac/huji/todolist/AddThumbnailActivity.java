@@ -81,7 +81,7 @@ public class AddThumbnailActivity extends Activity {
         	@Override
 			public void onClick(View v) {
         		
-        		//TODO delete all thumbnailsthat were downloaded
+        		//TODO delete all thumbnails that were downloaded
         		
 				setResult(RESULT_CANCELED);
 				finish();
