@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -36,8 +37,9 @@ public class Flickr {
 		
 		ArrayList<Photo> photos = new ArrayList<Photo>();
 		
+		@SuppressWarnings("deprecation")
 		URL url = new URL("http://www.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key=" + API_KEY
-				+ "&text=" + _searchQuery + "&per_page=" + MAX_IMAGES_TO_DOWNLOAD);
+				+ "&text=" + URLEncoder.encode(_searchQuery) + "&per_page=" + MAX_IMAGES_TO_DOWNLOAD);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		String response = readStream(conn.getInputStream());
 		
