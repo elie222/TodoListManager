@@ -29,7 +29,7 @@
         android:id="@+id/gridViewResult"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:numColumns="3" >
+        android:numColumns="4" >
     </GridView>
 
     <LinearLayout

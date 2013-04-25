@@ -8,10 +8,8 @@ import android.preference.PreferenceManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+//import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -35,7 +33,7 @@ public class TodoListManagerActivity extends FragmentActivity {
 	private Cursor cursor;
 	
 	// for debugging purposes. TAG is used for printing to console.
-	private static final String TAG = "TLM_ACTIVITY";
+//	private static final String TAG = "TLM_ACTIVITY";
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +119,6 @@ public class TodoListManagerActivity extends FragmentActivity {
 			    return true;
 			    
 			case R.id.menuItemAddThumbnail:
-				//TODO
 				// show a new activity that allows the user to search for an image on flickr
 				//and select it as the thumbnail for this todoitem
 				
@@ -175,7 +172,6 @@ public class TodoListManagerActivity extends FragmentActivity {
     	} else if (requestCode == ADD_THUMBNAIL_REQUEST_CODE && resultCode == RESULT_OK) {
        		String title = data.getStringExtra("title");
        		long imageId = data.getLongExtra("imageId", 0);
-       		Log.d("MAIN  ACT", "IMG ID: " + imageId);
        		
        		todoDal.updateThumbnail(title, String.valueOf(imageId));
     		refresh();

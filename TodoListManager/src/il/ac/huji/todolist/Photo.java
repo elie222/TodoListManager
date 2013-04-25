@@ -18,7 +18,8 @@ public class Photo {
 	}
 	
 	public URL getImageThumbnailURL() throws MalformedURLException {
-		return new URL("http://farm"+_farm+".staticflickr.com/"+_server+_id+"_"+_secret+"_t.jpg");
+		return new URL("http://farm"+_farm+".staticflickr.com/"+_server+"/"+_id+"_"+_secret+"_t.jpg");
+		//http://farm9.staticflickr.com/8522/8680479597_e5c5bf755d_t.jpg
 	}
 	
 	public String getId() {

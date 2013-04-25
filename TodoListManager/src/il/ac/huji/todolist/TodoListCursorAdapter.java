@@ -1,5 +1,7 @@
 package il.ac.huji.todolist;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -9,7 +11,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.util.Log;
+//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,13 +74,18 @@ public class TodoListCursorAdapter extends SimpleCursorAdapter {
 		
 		// Thumbnail
 		String location = cursor.getString(3);
-//		Log.d("CURSOR ADAPTER", "HERE1");
-		if (location != null) {
-			Log.d("CURSOR ADAPTER", "IMG LOCATION: " + location);
-			Bitmap bm = BitmapFactory.decodeFile(location);
+
+		if (location != null) {			
 			
-			ImageView imgThumbnail = (ImageView) view.findViewById(R.id.imgThumbnail);
-			imgThumbnail.setImageBitmap(bm);
+	        FileInputStream fis;
+			try {
+				fis = _context.openFileInput(location);
+				Bitmap bm = BitmapFactory.decodeStream(fis);
+				ImageView imgThumbnail = (ImageView) view.findViewById(R.id.imgThumbnail);
+				imgThumbnail.setImageBitmap(bm);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 //		Log.d("CURSOR ADAPTER", "HERE3");
 		
