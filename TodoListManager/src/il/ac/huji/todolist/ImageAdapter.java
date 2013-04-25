@@ -1,5 +1,7 @@
 package il.ac.huji.todolist;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -26,7 +28,7 @@ public class ImageAdapter extends ArrayAdapter<String> {
 
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
-    	Log.d("IMG ADAPTER", "GET VIEW FUNC");
+//    	Log.d("IMG ADAPTER", "GET VIEW FUNC");
         ImageView imageView;
         if (convertView == null) {  // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
@@ -37,8 +39,16 @@ public class ImageAdapter extends ArrayAdapter<String> {
             imageView = (ImageView) convertView;
         }
         
-        Bitmap bm = BitmapFactory.decodeFile(_data.get(position));
-        imageView.setImageBitmap(bm);
+        Log.d("IMG ADAPTER", _data.get(position));
+        FileInputStream fis;
+		try {
+			fis = mContext.openFileInput(_data.get(position));
+			Bitmap bm = BitmapFactory.decodeStream(fis);
+	        imageView.setImageBitmap(bm);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         return imageView;
     }
