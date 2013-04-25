@@ -48,8 +48,8 @@ public class TodoListManagerActivity extends FragmentActivity {
         listTasks = (ListView) findViewById(R.id.lstTodoItems);
                         
 		cursor = todoDal.getCursor();
-        String [] from = {"title", "due"};
-        int [] to = {R.id.txtTodoTitle, R.id.txtTodoDueDate};
+        String [] from = {"title", "due", "thumbnailLoc"};
+        int [] to = {R.id.txtTodoTitle, R.id.txtTodoDueDate, R.id.imgThumbnail};
         adapter = new TodoListCursorAdapter(this, R.layout.row, cursor, from, to);
                 
         listTasks.setAdapter(adapter);
@@ -170,22 +170,14 @@ public class TodoListManagerActivity extends FragmentActivity {
        		String title = data.getStringExtra("title");
     		Date dueDate = (Date)data.getSerializableExtra("dueDate");
     		
-    		todoDal.insert(new Task(title, dueDate), null);
+    		todoDal.insert(new Task(title, dueDate));
     		refresh();
     	} else if (requestCode == ADD_THUMBNAIL_REQUEST_CODE && resultCode == RESULT_OK) {
-    		// plan:
-    		// save image to local storage in other activity
-    		// other activity sends title and location
-    		// take the image and add as it as the thumbnail
-    		
        		String title = data.getStringExtra("title");
-       		Bitmap bm = (Bitmap)data.getSerializableExtra("bitmap");
+       		long imageId = data.getLongExtra("imageId", 0);
+       		Log.d("MAIN  ACT", "IMG ID: " + imageId);
        		
-       		todoDal.updateThumbnail(title, bm);
-       		//TODO
-//       	thumbnail = data.getStringExtra("thumbnail");
-
-//    		todoDal.update(new Task(title, dueDate));
+       		todoDal.updateThumbnail(title, String.valueOf(imageId));
     		refresh();
     	}
     }

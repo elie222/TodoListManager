@@ -1,45 +1,32 @@
 package il.ac.huji.todolist;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-public class ImageAdapter extends BaseAdapter {
+public class ImageAdapter extends ArrayAdapter<String> {
+
     private Context mContext;
+    private ArrayList<String> _data;
 
-    public ImageAdapter(Context c) {
-        mContext = c;
-    }
-
-    public int getCount() {
-        return mThumbIds.length;
-    }
-
-    public Object getItem(int position) {
+    public ImageAdapter(Context context, int layoutResourceId, ArrayList<String> data) {
+    	super(context, layoutResourceId, data);
     	
-    	
-    	// TODO
-        ImageView imageView = new ImageView(mContext);
-        imageView.setImageResource(mThumbIds[position]);
-        
-        Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-        
-        return bitmap;
-    }
-
-    //TODO should return file location
-    public long getItemId(int position) {
-    	
-    	return mThumbIds[position];
+        mContext = context;
+        _data = data;
     }
 
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
+    	Log.d("IMG ADAPTER", "GET VIEW FUNC");
         ImageView imageView;
         if (convertView == null) {  // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
@@ -49,23 +36,10 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-
-        imageView.setImageResource(mThumbIds[position]);
+        
+        Bitmap bm = BitmapFactory.decodeFile(_data.get(position));
+        imageView.setImageBitmap(bm);
+        
         return imageView;
     }
-
-    // references to our images
-    private Integer[] mThumbIds = {
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7,
-            R.drawable.sample_0, R.drawable.sample_1,
-            R.drawable.sample_2, R.drawable.sample_3,
-            R.drawable.sample_4, R.drawable.sample_5,
-            R.drawable.sample_6, R.drawable.sample_7
-    };
 }

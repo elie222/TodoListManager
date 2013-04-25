@@ -19,6 +19,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 //import android.util.Log;
+import android.util.Log;
 
 
 public class TodoDAL extends SQLiteOpenHelper {
@@ -36,7 +37,7 @@ public class TodoDAL extends SQLiteOpenHelper {
     public static final String KEY_THUMBNAIL_LOC = "thumbnailLoc";
     
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
     
     // for debugging purposes.
     private static final String TAG = "TODO_DAL";
@@ -54,12 +55,11 @@ public class TodoDAL extends SQLiteOpenHelper {
 	}
 	
 	public Cursor getCursor() {
-		String [] columns = new String[] { "_id", "title", "due" };
+		String [] columns = new String[] { KEY_ID, KEY_TITLE, KEY_DUE, KEY_THUMBNAIL_LOC };
 		return this.getReadableDatabase().query("todo", columns, null, null, null, null, null);
 	}
 	
-	//TODO parse - thumbnail
-	public boolean insert(ITodoItem todoItem, String thumbnailLoc) {
+	public boolean insert(ITodoItem todoItem) {
 		
 		if (todoItem == null) {
 			return false;
@@ -85,12 +85,7 @@ public class TodoDAL extends SQLiteOpenHelper {
 				values.putNull(KEY_DUE);
 			}
 			
-			//thumbnail
-			if (thumbnailLoc != null) {
-				values.put(KEY_THUMBNAIL_LOC, thumbnailLoc);
-			} else {
-				values.putNull(KEY_THUMBNAIL_LOC);
-			}
+			values.putNull(KEY_THUMBNAIL_LOC);
 			
 			long r = db.insert(TABLE_TODO, null, values);
 			db.close();
@@ -108,7 +103,6 @@ public class TodoDAL extends SQLiteOpenHelper {
 			} else {
 				obj.put(KEY_DUE, JSONObject.NULL);
 			}
-			
 
 			obj.saveInBackground();
 			
@@ -119,8 +113,7 @@ public class TodoDAL extends SQLiteOpenHelper {
 		return true;
 	}
 	
-	//TODO parse - thumbnails
-	public boolean update(ITodoItem todoItem, String thumbnailLoc) {
+	public boolean update(ITodoItem todoItem) {
 		
 		if (todoItem == null) {
 			return false;
@@ -146,13 +139,10 @@ public class TodoDAL extends SQLiteOpenHelper {
 				values.putNull(KEY_DUE);
 			}
 			
-			//thumbnail
-			if (thumbnailLoc != null) {
-				values.put(KEY_THUMBNAIL_LOC, thumbnailLoc);
-			} else {
-				values.putNull(KEY_THUMBNAIL_LOC);
-			}
-
+			//this deletes the thumbnail image associated with the item.
+			//don't really want to do this, but the app doesn't use this function anyway.
+			values.putNull(KEY_THUMBNAIL_LOC);
+			
 			String where = KEY_TITLE + " = ?";
 			String[] whereArgs = {todoItem.getTitle()};
 
@@ -186,6 +176,39 @@ public class TodoDAL extends SQLiteOpenHelper {
 			    }
 			});
 			
+		} catch (Exception e) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//added in hw5
+	//TODO add thumbnail to parse too.
+	public boolean updateThumbnail(String title, String thumbnailId) {
+		try {
+			// DB
+			SQLiteDatabase db = this.getWritableDatabase();
+			ContentValues values = new ContentValues();
+			
+			if (thumbnailId != null) {
+				values.put(KEY_THUMBNAIL_LOC, thumbnailId);
+			} else {
+				values.putNull(KEY_THUMBNAIL_LOC);
+			}
+			
+			String where = KEY_TITLE + " = ?";
+			String[] whereArgs = {title};
+	
+			long r = db.update(TABLE_TODO, values, where, whereArgs);
+			db.close();
+			
+			if (r == -1) {
+				return false;
+			}
+			
+			// TODO Parse
+		
 		} catch (Exception e) {
 			return false;
 		}
@@ -240,11 +263,6 @@ public class TodoDAL extends SQLiteOpenHelper {
 		return true;
 	}
 	
-	public boolean addThumbnail() {
-		return false;
-		
-	}
-	
 	public List<ITodoItem> all() {		
 		List<ITodoItem> todoItemList = new ArrayList<ITodoItem>();
 		
@@ -274,6 +292,11 @@ public class TodoDAL extends SQLiteOpenHelper {
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+		Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+		            + newVersion + ", which will destroy all old data");
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_TODO);
+		onCreate(db);
+		
+		//TODO drop parse table
 	}
 }

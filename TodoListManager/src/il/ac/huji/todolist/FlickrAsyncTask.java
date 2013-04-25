@@ -1,7 +1,8 @@
 package il.ac.huji.todolist;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -12,16 +13,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-public class FlickrAsyncTask extends AsyncTask<String, Void, double[]> {
+public class FlickrAsyncTask extends AsyncTask<String, Void, ArrayList<String>> {
 
 	private Context _context;
 	private GridView _resultGridView;
 	private ProgressDialog _progressDialog;
 	private String _searchQuery;
+	
+	private static final int MAX_PHOTOS_TO_DOWNLOAD = 4;
 
 	public FlickrAsyncTask(Context context, GridView resultGridView, String searchQuery) {
 		_context = context;
@@ -40,14 +42,21 @@ public class FlickrAsyncTask extends AsyncTask<String, Void, double[]> {
 	}
 
 	@Override
-	protected void onPostExecute(double[] result) {
+	protected void onPostExecute(ArrayList<String> result) {
 		_progressDialog.dismiss();
+		
+		Log.d("FLICKR ASYNC", "LEN: " + result.size());
+		
+		ImageAdapter imageAdapter = new ImageAdapter(_context, 0, result);
+		_resultGridView.setAdapter(imageAdapter);
 		
 		super.onPostExecute(result);
 	}
 
 	@Override
-	protected double[] doInBackground(String... params) {
+	protected ArrayList<String> doInBackground(String... params) {
+		ArrayList<String> ids = new ArrayList<String>(MAX_PHOTOS_TO_DOWNLOAD);
+		
 		ArrayList<Photo> photos = new ArrayList<Photo>();
 		Flickr flickr = new Flickr(_searchQuery);
 		
@@ -59,13 +68,31 @@ public class FlickrAsyncTask extends AsyncTask<String, Void, double[]> {
 			e.printStackTrace();
 		}
 		
-		for (int i=0; i<)
+//		Log.d("FLICKR ASYNC", "HERE1");
 		
-		//TODO download image and save to local storage
+		//download a maximum of MAX_PHOTOS_TO_DOWNLOAD images and save them to local storage
+		for (int i=0; i<photos.size() && i < MAX_PHOTOS_TO_DOWNLOAD; i++) {
+			try {
+//				Log.d("FLICKR ASYNC", "HERE LOOP");
+				Bitmap bm = loadBitmap(photos.get(i).getImageThumbnailURL());
+				String location = photos.get(i).getId();
+				FileOutputStream out = _context.openFileOutput(location, Context.MODE_PRIVATE);
+				bm.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//				ObjectOutputStream objOut = new ObjectOutputStream(out); 
+//				objOut.writeObject(bm); 
+//				objOut.close(); 
+				out.close();
+				
+				ids.add(location);
+			} catch (IOException e) {
+//				Log.d("FLICKR ASYNC", "HERE EXCEPTION");
+				e.printStackTrace();
+			}
+		}
 		
-		
-//		return new double[] { flickr.getLatitude(), flickr.getLongitude() };
-		return new double[] { 0, 0 };
+//		Log.d("FLICKR ASYNC", "HERE FINISHED");
+
+		return ids;
 	}
 
 	private static Bitmap loadBitmap(URL url) {

@@ -16,6 +16,7 @@ public class Flickr {
 	
 	private String _searchQuery;
 	private final static String API_KEY = "818fc8131d1e4dee07f53b8e113eb516";
+	private static final int MAX_IMAGES_TO_DOWNLOAD = 4;
 	
 	public Flickr(String searchQuery) {
 		_searchQuery = searchQuery;
@@ -36,7 +37,7 @@ public class Flickr {
 		ArrayList<Photo> photos = new ArrayList<Photo>();
 		
 		URL url = new URL("http://www.flickr.com/services/rest/?method=flickr.photos.search&format=json&api_key=" + API_KEY
-				+ "&text=" + _searchQuery);
+				+ "&text=" + _searchQuery + "&per_page=" + MAX_IMAGES_TO_DOWNLOAD);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		String response = readStream(conn.getInputStream());
 		

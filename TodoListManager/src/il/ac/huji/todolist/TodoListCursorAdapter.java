@@ -6,7 +6,10 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +32,7 @@ public class TodoListCursorAdapter extends SimpleCursorAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
-		LayoutInflater inflater = 
-				(LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.row, null);
 		
 		Cursor cursor = (Cursor) getItem(position);
@@ -46,7 +48,6 @@ public class TodoListCursorAdapter extends SimpleCursorAdapter {
 		
 		TextView txtTitle = (TextView) view.findViewById(R.id.txtTodoTitle);
 		TextView txtDueDate = (TextView) view.findViewById(R.id.txtTodoDueDate);
-		ImageView imgThumbnail = (ImageView) view.findViewById(R.id.imgThumbnail);
 		
 		txtTitle.setText(task.getTitle());
 		
@@ -69,7 +70,17 @@ public class TodoListCursorAdapter extends SimpleCursorAdapter {
 			}
 		}
 		
-//		imgThumbnail.setImageBitmap(bm);
+		// Thumbnail
+		String location = cursor.getString(3);
+//		Log.d("CURSOR ADAPTER", "HERE1");
+		if (location != null) {
+			Log.d("CURSOR ADAPTER", "IMG LOCATION: " + location);
+			Bitmap bm = BitmapFactory.decodeFile(location);
+			
+			ImageView imgThumbnail = (ImageView) view.findViewById(R.id.imgThumbnail);
+			imgThumbnail.setImageBitmap(bm);
+		}
+//		Log.d("CURSOR ADAPTER", "HERE3");
 		
 		return view;
 	}

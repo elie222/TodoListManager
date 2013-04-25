@@ -2,7 +2,6 @@ package il.ac.huji.todolist;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.json.JSONException;
 
@@ -47,7 +46,6 @@ public class TwitterAsyncTask extends AsyncTask<String, Void, ArrayList<Tweet>> 
 	protected void onPreExecute() {
 		progressDialog = new ProgressDialog(_context);
 		progressDialog.setTitle("Twitter");
-		//TODO change this line
 		progressDialog.setMessage("Checking Twitter for new tweets with #" + _tag + " tag...");
 		progressDialog.setCancelable(false);
 		progressDialog.show();
@@ -68,9 +66,8 @@ public class TwitterAsyncTask extends AsyncTask<String, Void, ArrayList<Tweet>> 
                     // Create new todo items
                 	for (int i=0; i<result.size(); i++) {
                 		if (result.get(i).getId() > _latestTweetId) {
-	                		//TODO date
-	                		_todoDal.insert(new Task(result.get(i).getText(), new Date(1)), null);
-//	                		_todoDal.insert(new Task(result.get(i).getText(), result.get(i).getCreatedAt()));
+	                		//TODO date?
+	                		_todoDal.insert(new Task(result.get(i).getText(), null));
                 		}
                 	}
                 	
